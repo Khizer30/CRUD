@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./db.db3"
+}
+
+model Book {
+  id          Int      @id @default(autoincrement())
+  title       String   @default("")
+  author      String   @default("")
+  pages       Int      @default(0)
+  publishedAt DateTime @default(now())
+}
