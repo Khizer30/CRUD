@@ -21,7 +21,7 @@ export default function Page(): JSX.Element
       const response: Response = await fetch("/api/read",
         {
           mode: "same-origin",
-          method: "GET",
+          method: "POST",
           headers:
           {
             "Content-Type": "application/json"

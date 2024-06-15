@@ -4,7 +4,7 @@ import { Book } from "@prisma/client";
 import { readBooks } from "@lib/db";
 
 // Read
-export async function GET(): Promise<NextResponse<Book[]>>
+export async function POST(): Promise<NextResponse<Book[]>>
 {
   const books: Book[] = await readBooks();
 
