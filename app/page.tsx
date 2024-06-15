@@ -66,6 +66,30 @@ export default function Page(): JSX.Element
     }
   }
 
+  // Edit Book
+  function editBook(x: Book): void
+  {
+    setInputs(x);
+  }
+
+  // Delete Book
+  async function deleteBook(x: Book): Promise<void>
+  {
+    const response: Response = await fetch("/api/delete",
+      {
+        mode: "same-origin",
+        method: "POST",
+        headers:
+        {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(x)
+      });
+
+    const res: Book[] = await response.json();
+    setBooks(res);
+  }
+
   // Row Mapper
   function rowMapper(x: Book): JSX.Element
   {
@@ -91,6 +115,7 @@ export default function Page(): JSX.Element
             color="gray"
             ripple
             className=" rounded-full"
+            onClick={ () => editBook(x) }
           >
             <PencilSquareIcon className=" w-4 h-4" />
           </Button>
@@ -103,6 +128,7 @@ export default function Page(): JSX.Element
             color="gray"
             ripple
             className=" rounded-full"
+            onClick={ () => deleteBook(x) }
           >
             <TrashIcon className=" w-4 h-4" />
           </Button>

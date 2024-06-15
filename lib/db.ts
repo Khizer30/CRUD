@@ -64,4 +64,32 @@ async function readBooks(): Promise<Book[]>
   return books;
 }
 
-export { upsertBook, readBooks };
+// Delete Book
+async function deleteBook(x: Book): Promise<Book[]>
+{
+  let books: Book[] = [];
+
+  try
+  {
+    await prisma.book.delete({
+      where:
+      {
+        title: x.title
+      }
+    });
+
+    books = await prisma.book.findMany();
+  }
+  catch (err: unknown)
+  {
+    console.error(err);
+  }
+  finally
+  {
+    await prisma.$disconnect();
+  }
+
+  return books;
+}
+
+export { upsertBook, readBooks, deleteBook };
