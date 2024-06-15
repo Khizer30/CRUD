@@ -32,7 +32,7 @@ export default function Layout({ children }: Children): JSX.Element
 {
   return (
     <html lang="en-PK">
-      <body>
+      <body className=" h-screen p-6">
         { children }
       </body>
     </html>
