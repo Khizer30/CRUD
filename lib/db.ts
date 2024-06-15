@@ -28,6 +28,8 @@ async function upsertBook(x: Book): Promise<Book[]>
         publishedAt: new Date(x.publishedAt)
       }
     });
+
+    books = await prisma.book.findMany();
   }
   catch (err: unknown)
   {
@@ -41,4 +43,25 @@ async function upsertBook(x: Book): Promise<Book[]>
   return books;
 }
 
-export { upsertBook };
+// Read Books
+async function readBooks(): Promise<Book[]>
+{
+  let books: Book[] = [];
+
+  try
+  {
+    books = await prisma.book.findMany();
+  }
+  catch (err: unknown)
+  {
+    console.error(err);
+  }
+  finally
+  {
+    await prisma.$disconnect();
+  }
+
+  return books;
+}
+
+export { upsertBook, readBooks };

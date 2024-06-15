@@ -1,7 +1,7 @@
 "use client";
 import { Typography, Input, Button } from "@material-tailwind/react";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { useState, type ChangeEvent } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import { format } from "date-fns";
 //
 import { Book } from "@prisma/client";
@@ -12,6 +12,26 @@ export default function Page(): JSX.Element
 {
   const [inputs, setInputs] = useState<Book>(bookObj);
   const [books, setBooks] = useState<Book[]>([]);
+
+  // On Load
+  useEffect(() =>
+  {
+    (async () =>
+    {
+      const response: Response = await fetch("/api/read",
+        {
+          mode: "same-origin",
+          method: "GET",
+          headers:
+          {
+            "Content-Type": "application/json"
+          }
+        });
+
+      const res: Book[] = await response.json();
+      setBooks(res);
+    })();
+  }, []);
 
   // Handle Change
   function handleChange(e: ChangeEvent<HTMLInputElement>): void
@@ -168,7 +188,7 @@ export default function Page(): JSX.Element
 
       </form>
 
-      <div className=" my-10 border border-gray-300 rounded-lg overflow-y-scroll">
+      <div className=" mx-6 my-10 border border-gray-300 rounded-lg overflow-y-scroll">
 
         <div className=" h-10 grid grid-cols-12 bg-gray-100">
           <div className=" p-2 col-span-4 flex justify-start items-center border border-r-gray-300">
