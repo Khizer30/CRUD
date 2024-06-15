@@ -8,8 +8,7 @@ datasource db {
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
-  title       String   @default("")
+  title       String   @id @default("")
   author      String   @default("")
   pages       Int      @default(0)
   publishedAt DateTime @default(now())

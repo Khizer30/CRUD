@@ -1,7 +1,8 @@
 "use client";
 import { Typography, Input, Button } from "@material-tailwind/react";
-import { useState, type ChangeEvent } from "react";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { useState, type ChangeEvent } from "react";
+import { format } from "date-fns";
 //
 import { Book } from "@prisma/client";
 import { bookObj } from "@lib/objects";
@@ -22,14 +23,34 @@ export default function Page(): JSX.Element
   async function handleSubmit(e: ChangeEvent<HTMLFormElement>): Promise<void>
   {
     e.preventDefault();
-    console.log(inputs);
+
+    if (inputs.title === "" || inputs.author === "" || !inputs.pages)
+    {
+      alert("Complete The Form!");
+    }
+    else
+    {
+      const response: Response = await fetch("/api/upsert",
+        {
+          mode: "same-origin",
+          method: "POST",
+          headers:
+          {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(inputs)
+        });
+
+      const res: Book[] = await response.json();
+      setBooks(res);
+    }
   }
 
   // Row Mapper
   function rowMapper(x: Book): JSX.Element
   {
     return (
-      <div className=" grid grid-cols-12" key={ x.id }>
+      <div className=" grid grid-cols-12" key={ x.title }>
         <div className=" p-2 col-span-4 flex justify-start items-center border border-r-gray-300">
           <h6 className=" font-primary text-sm text-gray-700"> { x.title } </h6>
         </div>
@@ -37,7 +58,7 @@ export default function Page(): JSX.Element
           <h6 className=" font-primary text-sm text-gray-700"> { x.author } </h6>
         </div>
         <div className=" p-2 col-span-2 flex justify-start items-center border border-x-gray-300">
-          <h6 className=" font-primary text-sm text-gray-700"> { x.publishedAt.toLocaleDateString() } </h6>
+          <h6 className=" font-primary text-sm text-gray-700"> { format(x.publishedAt, "dd/MM/yyyy") } </h6>
         </div>
         <div className=" p-2 col-span-1 flex justify-start items-center border border-x-gray-300">
           <h6 className=" font-primary text-sm text-gray-700"> { x.pages } </h6>
@@ -86,6 +107,7 @@ export default function Page(): JSX.Element
             size="md"
             color="gray"
             autoFocus
+            required
             value={ inputs.title }
             onChange={ handleChange }
           />
@@ -99,6 +121,7 @@ export default function Page(): JSX.Element
             variant="outlined"
             size="md"
             color="gray"
+            required
             value={ inputs.author }
             onChange={ handleChange }
           />
@@ -112,6 +135,7 @@ export default function Page(): JSX.Element
             variant="outlined"
             size="md"
             color="gray"
+            required
             value={ inputs.pages || "" }
             onChange={ handleChange }
           />
@@ -125,7 +149,8 @@ export default function Page(): JSX.Element
             variant="outlined"
             size="lg"
             color="gray"
-            value={ inputs.publishedAt.toString() }
+            required
+            value={ format(inputs.publishedAt, "yyyy-MM-dd") }
             onChange={ handleChange }
           />
         </div>
